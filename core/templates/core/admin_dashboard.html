@@ -1,0 +1,28 @@
+{% extends 'core/base.html' %}
+{% block content %}
+<h1>Admin Dashboard</h1>
+<p>Total elections: {{ elections.count }} | Total votes cast: {{ total_votes }}</p>
+<p><a href="{% url 'core:election_create' %}" class="button">Create Election</a>
+<a href="{% url 'core:candidate_list' %}" class="button">Manage Candidates</a></p>
+<table class="data-table">
+    <thead>
+        <tr>
+            <th>Election</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for election in elections %}
+        <tr>
+            <td>{{ election.title }}</td>
+            <td>{% if election.is_ongoing %}Ongoing{% elif election.is_expired %}Expired{% else %}Upcoming{% endif %}</td>
+            <td>
+                <a href="{% url 'core:election_edit' election.pk %}">Edit</a>
+                <a href="{% url 'core:election_delete' election.pk %}">Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

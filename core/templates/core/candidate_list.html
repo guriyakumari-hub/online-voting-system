@@ -1,0 +1,28 @@
+{% extends 'core/base.html' %}
+{% block content %}
+<h1>Candidate Management</h1>
+<p><a href="{% url 'core:candidate_create' %}" class="button">Add Candidate</a></p>
+<table class="data-table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Election</th>
+            <th>User</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for candidate in candidates %}
+        <tr>
+            <td>{{ candidate.full_name }}</td>
+            <td>{{ candidate.election.title }}</td>
+            <td>{% if candidate.user %}{{ candidate.user.username }}{% else %}N/A{% endif %}</td>
+            <td>
+                <a href="{% url 'core:candidate_edit' candidate.pk %}">Edit</a>
+                <a href="{% url 'core:candidate_delete' candidate.pk %}">Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

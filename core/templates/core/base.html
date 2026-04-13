@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Voting System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
+    <link rel="stylesheet" href="{% static 'core/styles.css' %}">
+</head>
+<body>
+<header>
+    <div class="topbar">
+        <a href="{% url 'core:election_list' %}" class="brand">Voting System</a>
+        <nav>
+            {% if user.is_authenticated %}
+                <a href="{% url 'core:election_list' %}">Elections</a>
+                <a href="{% url 'core:profile' %}">Profile</a>
+                {% if user.is_staff %}
+                    <a href="{% url 'core:admin_dashboard' %}">Admin</a>
+                {% endif %}
+                <a href="{% url 'core:logout' %}">Logout</a>
+            {% else %}
+                <a href="{% url 'core:login' %}">Login</a>
+                <a href="{% url 'core:register' %}">Register</a>
+            {% endif %}
+        </nav>
+    </div>
+</header>
+<main>
+    <section class="container">
+        {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                    <div class="message {{ message.tags }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        {% block content %}{% endblock %}
+    </section>
+</main>
+<footer>
+    <p>Online Voting System &copy; 2026</p>
+</footer>
+</body>
+</html>

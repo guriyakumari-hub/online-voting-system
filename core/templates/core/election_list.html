@@ -1,0 +1,40 @@
+{% extends 'core/base.html' %}
+{% block content %}
+<h1>Available Elections</h1>
+<section class="card-list">
+    <div class="card-block">
+        <h2>Ongoing Elections</h2>
+        {% if ongoing %}
+            <ul>
+                {% for election in ongoing %}
+                    <li>
+                        <a href="{% url 'core:election_detail' election.pk %}">{{ election.title }}</a>
+                        <span>{{ election.start_date|date:'M d, Y H:i' }} - {{ election.end_date|date:'M d, Y H:i' }}</span>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No ongoing elections at the moment.</p>
+        {% endif %}
+    </div>
+    <div class="card-block">
+        <h2>Expired Elections</h2>
+        {% if expired %}
+            <ul>
+                {% for election in expired %}
+                    <li>
+                        <a href="{% url 'core:election_detail' election.pk %}">{{ election.title }}</a>
+                        {% if election.winner %}
+                            <span>Winner: {{ election.winner.full_name }}</span>
+                        {% else %}
+                            <span>Winner: Not yet available</span>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No expired elections yet.</p>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

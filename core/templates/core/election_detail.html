@@ -1,0 +1,45 @@
+{% extends 'core/base.html' %}
+{% block content %}
+<h1>{{ election.title }}</h1>
+<p>{{ election.description }}</p>
+<p><strong>Start:</strong> {{ election.start_date|date:'M d, Y H:i' }}<br>
+<strong>End:</strong> {{ election.end_date|date:'M d, Y H:i' }}</p>
+
+{% if user_vote %}
+    <p class="info">You voted for <strong>{{ user_vote.candidate.full_name }}</strong>.</p>
+{% endif %}
+
+<section class="card-block">
+    <h2>Candidates</h2>
+    {% if election.candidates.exists %}
+        <form method="post" action="{% url 'core:cast_vote' election.pk %}">
+            {% csrf_token %}
+            <ul class="candidate-list">
+                {% for candidate in election.candidates.all %}
+                    <li>
+                        <label>
+                            <input type="radio" name="candidate" value="{{ candidate.pk }}" {% if user_vote and user_vote.candidate.pk == candidate.pk %}checked{% endif %}>
+                            <strong>{{ candidate.full_name }}</strong>{% if candidate.user %} (Registered){% endif %}
+                        </label>
+                        <p>{{ candidate.manifesto }}</p>
+                    </li>
+                {% endfor %}
+            </ul>
+            {% if election.is_ongoing %}
+                <button type="submit">Cast / Update Vote</button>
+            {% else %}
+                <p>Voting is closed for this election.</p>
+            {% endif %}
+        </form>
+    {% else %}
+        <p>No candidates have been added yet.</p>
+    {% endif %}
+</section>
+
+{% if election.is_expired and election.winner %}
+    <section class="card-block">
+        <h2>Winner</h2>
+        <p><strong>{{ election.winner.full_name }}</strong> with {{ election.winner.vote_count }} votes.</p>
+    </section>
+{% endif %}
+{% endblock %}
